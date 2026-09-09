@@ -41,33 +41,25 @@ git clone https://github.com/jeffreyad/rpharma-2026-workshop.git
 cd rpharma-2026-workshop
 ```
 
-### 2. R
+### 2. Install the dependencies
 
-Use **R >= 4.2** (the skills were exercised on R 4.4.1).
-
-```r
-# For the admiral skills
-install.packages(c(
-  "admiral", "dplyr", "lubridate", "metacore", "xportr",
-  "pharmaversesdtm", "pharmaverseadam"
-))
-
-# For the group-sequential-design skill
-install.packages(c(
-  "gsDesign", "gsDesign2", "lrstat", "graphicalMCP", "jsonlite"
-))
-```
-
-`admiral >= 1.2.0` is expected. `pharmaversesdtm` / `pharmaverseadam` supply the
-public CDISC-conformant datasets the admiral examples run against.
-
-### 3. Python (group-sequential-design only)
-
-The GSD report generator needs **Python >= 3.8** and `python-docx`:
+Use **R >= 4.2** (the skills were exercised on R 4.4.1) and, for the
+group-sequential-design report step, **Python >= 3.8**.
 
 ```bash
-pip install python-docx
+Rscript install_packages.R                  # the 12 R packages
+python3 -m pip install --user python-docx   # Word-report dependency
 ```
+
+### 3. Verify
+
+```bash
+Rscript check_setup.R
+```
+
+Every line should read `[ OK ]`. If anything fails — a read-only R library, a CRAN
+mirror prompt, a compile error, a Python that pip and R disagree about — see
+[`INSTALL.md`](INSTALL.md) for the manual commands and per-platform fixes.
 
 ### 4. Point Claude Code at the skills
 
