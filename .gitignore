@@ -1,0 +1,23 @@
+# R session files
+.RData
+.Rhistory
+.Rproj.user/
+*.Rproj
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Skill run output produced while following along
+/output/
+/runs/
+*.xpt
+gsd_report.docx
+gsd_results.json
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

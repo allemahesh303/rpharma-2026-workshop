@@ -1,0 +1,32 @@
+MIT License
+
+Copyright (c) 2026 Jeff Dickinson and Eric Zhang
+
+The skills in this repository are curated, without modification to their
+derivation logic, from the R Consortium `pharma-skills` project
+(https://github.com/RConsortium/pharma-skills), where every skill is
+MIT-licensed. Each skill directory also carries its own LICENSE file naming
+the copyright holder for that skill:
+
+  * skills/admiral/admiral-adsl  — Copyright (c) 2026 Jeff Dickinson, Navitas Data Sciences
+  * skills/admiral/admiral-adae  — Copyright (c) 2026 Jeff Dickinson, Navitas Data Sciences
+  * skills/admiral/admiral-bds   — Copyright (c) 2026 Jeff Dickinson, Navitas Data Sciences
+  * skills/group-sequential-design — Copyright (c) 2026 Eric Zhang
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
