@@ -227,25 +227,29 @@ If attendees clone it themselves:
 From the repo root, run the environment check script:
 
 ``` r
-source("check_setup.R")   # [CONFIRM WITH JEFF: script does not exist yet]
+source("check_setup.R")
 ```
 
-It should verify:
+It verifies, printing `[ OK ]` / `[WARN]` / `[FAIL]` per line:
 
-- R &ge; 4.2 and the admiral package set (`admiral`, `dplyr`, `lubridate`,
-  `pharmaversesdtm`, `pharmaverseadam`, …)
-- The GSD package set (`gsDesign`, `gsDesign2`, `lrstat`, `graphicalMCP`,
-  `jsonlite`)
+- R &ge; 4.2 and the admiral set (`admiral` &ge; 1.2.0, `dplyr`, `lubridate`,
+  `pharmaversesdtm`, `pharmaverseadam`, `metacore`, `xportr`)
+- The GSD set (`gsDesign`, `gsDesign2`, `lrstat`, `graphicalMCP`, `jsonlite`)
 - Python &ge; 3.8 with `python-docx`
 
-::: {.notes}
-OPEN ITEM: `check_setup.R` is not written yet. Decision needed from Jeff:
-(a) draft it from the README package lists (R version check + `requireNamespace`
-loop + Python/`python-docx` check + pass/fail summary), or (b) rely on a
-pre-provisioned image where everything is already installed and skip this slide.
+**All `[ OK ]` &rarr; you're ready.** Any `[FAIL]` &rarr; install commands are
+in `README.md`.
 
-If the environment is pre-provisioned, this slide becomes "everything is
-already installed — here's how to confirm."
+::: {.notes}
+`check_setup.R` is base-R only (no package needed to run it) and installs
+nothing — it only reports. On Windows it skips the Microsoft Store
+`python3.exe` alias and finds a real interpreter via `py -3`.
+
+If the Workbench image is pre-provisioned with everything installed, this slide
+becomes a 10-second confirmation rather than an install step.
+
+[CONFIRM WITH JEFF: is the image pre-provisioned, or do attendees run the
+README install commands first? That changes how much time this slide needs.]
 :::
 
 ## You should now see…
