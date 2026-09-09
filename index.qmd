@@ -1,17 +1,19 @@
 ---
-title: "AI Skills for Clinical Trial Design & ADaM Derivation"
-subtitle: "A hands-on workshop &middot; R/Pharma 2026"
+title: "Pharma Skills Workshop"
+subtitle: "Hands-On AI Skills for Clinical Programming &amp; Biostatistics"
 author:
-  - name: "Jeff Dickinson"
-    affiliations: "Navitas Data Sciences &middot; admiral Core Team"
-  - name: "Eric Zhang"
-    affiliations: "[CONFIRM WITH ERIC: affiliation]"
+  - name: "Jeff Dickinson, PhD"
+    affiliations: "Associate Director, Clinical Reporting &middot; Navitas Data Sciences"
+  - name: "Eric Zhang, PhD"
+    affiliations: "Senior Director, Biostatistics &middot; Eikon Therapeutics"
+date: "2026-10-01"
+date-format: "long"
 format:
   revealjs:
     theme: simple
     slide-number: true
     number-sections: true
-    footer: "R/Pharma 2026 Workshop"
+    footer: "Pharma Skills Workshop &middot; R/Pharma Virtual 2026"
     toc: false
     width: 1200
     height: 720
@@ -20,55 +22,86 @@ format:
 
 # Welcome {.unnumbered}
 
-## AI Skills for Clinical Trial Design & ADaM Derivation
+## Pharma Skills Workshop
 
-**R/Pharma 2026 Workshop**
+**Hands-On AI Skills for Clinical Programming & Biostatistics**
+
+R/Pharma Virtual 2026 &middot; Thursday, October 1, 2026 &middot; 8:00–11:00 AM CDT &middot; Virtual
 
 Presenters:
 
-- **Jeff Dickinson** — Navitas Data Sciences; admiral Core Team
-- **Eric Zhang** — [CONFIRM WITH ERIC: affiliation / title]
+- **Jeff Dickinson, PhD** — Associate Director, Clinical Reporting, Navitas Data Sciences
+- **Eric Zhang, PhD** — Senior Director, Biostatistics, Eikon Therapeutics
 
 ::: {.notes}
-Housekeeping to cover verbally: total session length, break schedule, how to
-ask for help during hands-on time, and where the repo lives.
+Virtual housekeeping to cover verbally: how to ask questions (chat vs.
+unmute), how help works during hands-on time (breakout rooms / screen share),
+and where the repo and environment links are posted (pin them in chat).
 
-[CONFIRM WITH JEFF: exact workshop date, room, and session length so we can
-state it here or on a housekeeping slide.]
+Three-hour block, 8:00–11:00 CDT. One break around the midpoint.
 
-One-line framing for the opening: this is a working session — by the end you
-will have run two production-style clinical-programming workflows end to end,
-driven entirely by describing the task to an AI agent in plain language.
+Opening framing: by the end you will have run two production-style
+clinical workflows end to end by describing the task to an AI agent in plain
+language — and you will have modified a skill and sketched one of your own.
 :::
 
-## What you will walk out with
+## What you'll do
 
-- A working mental model of what an **agent skill** is and why it changes
-  clinical programming
-- Hands-on experience running the **admiral ADaM skills** (ADSL → ADAE / BDS)
-- Hands-on experience running the **group sequential design skill** for a
-  survival trial
-- A local setup you can keep using after the workshop
+- **Run AI skills on real-world exercises** — ADaM generation and group
+  sequential design
+- **See how skills are structured** and how they interact with the AI model
+- **Modify or extend** an existing skill
+- **Create a simple skill of your own**, with instructor support
+- Leave with **practical ideas** for applying AI skills to your own work
+
+*No prior AI-skills experience required.*
 
 ::: {.notes}
-Emphasise: these skills produce *drafting aids, not validated deliverables*.
-Everything the agent writes still goes through your own QC before any
-regulatory, clinical, or GxP-regulated use. We will repeat this point in each
-section.
+This mirrors the official session description. Emphasise the last two bullets —
+this workshop is not just "watch the agent work," it's "learn to build the
+thing that makes the agent reliable."
+
+Repeat throughout: these skills produce *drafting aids, not validated
+deliverables*. Independent QC still required before any regulated use.
+:::
+
+## Who this is for
+
+- Statistical programmers
+- Biostatisticians
+- Clinical data scientists
+- Anyone interested in practical AI applications in pharma R&D
+
+Pick the exercises closest to your work — the ADaM thread, the group
+sequential design thread, or both.
+
+::: {.notes}
+Set expectations: programmers may go deep on Section A, statisticians on
+Section B, and everyone converges for the skill-authoring section. The
+environment is preconfigured so no one loses time on setup.
 :::
 
 ## Agenda
 
 1. Skills overview — what they are, why they matter
-2. Environment setup — sign in, launch Positron, check packages
+2. Environment orientation — sign in, confirm you're ready
 3. **Section A** — ADaM generation (Jeff)
 4. **Section B** — Group sequential design (Eric)
-5. Wrap-up and where to go next
+5. **Section C** — Modify, extend, and build a skill
+6. Wrap-up — ideas to take back
+
+Three hours, one break near the midpoint.
 
 ::: {.notes}
-[CONFIRM WITH JEFF/ERIC: time budget per section — fill in once total session
-length is known. Rough split to confirm: ~15 min overview, ~15 min setup,
-~45 min Section A, ~45 min Section B, ~10 min wrap-up.]
+[CONFIRM WITH JEFF/ERIC: split of the 3-hour block.] Proposed, to confirm:
+
+- 8:00–8:25  Welcome + skills overview
+- 8:25–8:40  Environment orientation
+- 8:40–9:35  Section A — ADaM
+- 9:35–9:45  Break
+- 9:45–10:40 Section B — group sequential design
+- 10:40–10:55 Section C — modify / build a skill
+- 10:55–11:00 Wrap-up
 :::
 
 # Skills overview
@@ -113,6 +146,10 @@ The agent then reproduces that discipline on every run.
 The point is consistency and traceability, not just speed. A skilled run
 produces code that already has review markers where a human must make a
 protocol call — the reviewer's attention is directed, not diffused.
+
+Same argument on the biostatistics side: the group sequential design skill
+encodes scope checks, the N-first algorithm, IA-timing constraints, and a
+mandatory simulation-verification step.
 :::
 
 ## Skills vs. no skills — the benchmarking evidence
@@ -152,42 +189,63 @@ Every skill in this workshop repo is copied from pharma-skills without changes
 to its derivation logic. Credit: admiral skills — Jeff Dickinson (Navitas);
 group-sequential-design — Eric Zhang.
 
-Point people at the LIFECYCLE.md doc if they want to contribute a skill.
+Point people at LIFECYCLE.md if they want to contribute a skill — it connects
+to Section C.
 :::
 
-## Two threads today
+## Three threads today
 
 ::: {.columns}
-::: {.column width="50%"}
-### Section A — ADaM generation
+::: {.column width="33%"}
+### A &middot; ADaM generation
 
 Derive analysis datasets from SDTM with **{admiral}**:
 
-- `admiral` (parent conventions)
+- `admiral` (parent)
 - `admiral-adsl` → `admiral-adae` → `admiral-bds`
-
-Output: QC-ready, review-annotated R.
 :::
-::: {.column width="50%"}
-### Section B — Group sequential design
+::: {.column width="33%"}
+### B &middot; Group sequential design
 
 Design a survival trial with **gsDesign / gsDesign2 / lrstat**:
 
-- Spending-function boundaries, sample size, multiplicity
-- Simulation-based verification
-- Template-driven Word report
+- Boundaries, sample size, multiplicity
+- Simulation verification + Word report
+:::
+::: {.column width="33%"}
+### C &middot; Build a skill
+
+- Read a `SKILL.md` and its references
+- Modify / extend one
+- Sketch your own
 :::
 :::
 
 ::: {.notes}
-Both threads share the same interaction model: you describe the task in
-natural language, the agent loads the matching skill, and you review what it
-produces. The domains differ; the workflow does not.
+All three share one interaction model: describe the task in natural language,
+the agent loads the matching skill, you review what it produces. The domains
+differ; the workflow does not.
 :::
 
-# Environment setup
+# Environment orientation
 
-## 1. Sign in to Posit Workbench
+## No setup required
+
+The workshop runs in a **preconfigured environment** with:
+
+- Access to the AI model, already wired up
+- A library of pharma-focused skills, pre-installed
+- All R and Python packages for both threads, already installed
+
+You do **not** need to install anything or configure anything in advance.
+
+::: {.notes}
+This is straight from the session description — "participants will work in a
+preconfigured environment ... without any advance setup." The next few slides
+are about *getting in* and *confirming*, not installing.
+:::
+
+## 1. Sign in
 
 Go to **<https://workshop.posit.team/>** and sign in.
 
@@ -195,61 +253,50 @@ Go to **<https://workshop.posit.team/>** and sign in.
 - Use the same account for the whole session
 
 ::: {.notes}
-Mirror the reference deck's sign-in style: walk the room through it live,
-confirm everyone is in before moving on. If someone's GitHub sign-in fails,
-have them try the OpenID option.
+Walk the room through it live in the webinar; confirm everyone is in via chat
+before moving on. If GitHub sign-in fails, try the OpenID option.
 
-[CONFIRM WITH JEFF: is there a per-attendee username/password, an access code,
-or is it self-service GitHub/OpenID only? Confirm the exact wording of the
-sign-in options shown on workshop.posit.team.]
+[CONFIRM WITH JEFF: is there a per-attendee access code / invite, or is it
+self-service GitHub/OpenID only? Confirm the exact wording of the sign-in
+options shown on workshop.posit.team.]
 :::
 
-## 2. Launch a Positron session
+## 2. Open your Positron session
 
-In Workbench, start a new session and choose the **Positron** IDE.
+In Workbench, start the session and choose the **Positron** IDE.
 
-**Why Positron?** It supports **both R and Python** in one IDE — Section A is
-R (admiral), and Section B's report generator is Python (`python-docx`). One
-session covers both threads.
+**Why Positron?** One IDE, **both R and Python** — Section A is R (admiral),
+Section B's report generator is Python (`python-docx`), and Section C touches
+both. One session covers everything.
 
 ::: {.notes}
-[CONFIRM WITH JEFF: session resource preset to pick (CPU / memory), and the
-project / working directory attendees should land in — e.g. a pre-cloned
-copy of this repo, or do they clone it themselves as the first step?]
-
-If attendees clone it themselves:
-`git clone https://github.com/jeffreyad/rpharma-2026-workshop.git`
-[CONFIRM WITH JEFF: canonical repo URL.]
+[CONFIRM WITH JEFF: does each attendee land in a pre-cloned copy of the
+workshop repo, or clone it themselves as step one?
+`git clone https://github.com/jeffreyad/rpharma-2026-workshop.git`]
 :::
 
-## 3. Run the setup check
+## 3. Confirm you're ready
 
-From the repo root, run the environment check script:
+From the repo root:
 
 ``` r
 source("check_setup.R")
 ```
 
-It verifies, printing `[ OK ]` / `[WARN]` / `[FAIL]` per line:
+Prints `[ OK ]` / `[WARN]` / `[FAIL]` per line for:
 
 - R &ge; 4.2 and the admiral set (`admiral` &ge; 1.2.0, `dplyr`, `lubridate`,
   `pharmaversesdtm`, `pharmaverseadam`, `metacore`, `xportr`)
 - The GSD set (`gsDesign`, `gsDesign2`, `lrstat`, `graphicalMCP`, `jsonlite`)
 - Python &ge; 3.8 with `python-docx`
 
-**All `[ OK ]` &rarr; you're ready.** Any `[FAIL]` &rarr; install commands are
-in `README.md`.
+In the preconfigured environment every line should be **`[ OK ]`**.
 
 ::: {.notes}
-`check_setup.R` is base-R only (no package needed to run it) and installs
-nothing — it only reports. On Windows it skips the Microsoft Store
-`python3.exe` alias and finds a real interpreter via `py -3`.
-
-If the Workbench image is pre-provisioned with everything installed, this slide
-becomes a 10-second confirmation rather than an install step.
-
-[CONFIRM WITH JEFF: is the image pre-provisioned, or do attendees run the
-README install commands first? That changes how much time this slide needs.]
+`check_setup.R` is base-R only and installs nothing — it just reports. It
+exists as a fast confidence check that your session is intact. If anything is
+`[FAIL]` in the workshop environment, flag it in chat — that's an environment
+issue, not something you fix.
 :::
 
 ## You should now see…
@@ -264,10 +311,10 @@ Ready-state checklist
 
 ::: {.notes}
 [CONFIRM WITH JEFF: replace with an actual screenshot of the ready state, or a
-precise description of what attendees see. Consider a projected reference image
-so people can self-check without flagging down a helper.]
+precise description. Consider sharing a reference screenshot in chat so people
+can self-check without unmuting.]
 
-Do not start Section A until everyone confirms this slide.
+Do not start Section A until everyone confirms this in chat.
 :::
 
 # Section A — ADaM generation {.unnumbered}
@@ -288,12 +335,12 @@ every downstream dataset.
 
 ::: {.notes}
 Source data is the pharmaverse public CDISC test data (`pharmaversesdtm` /
-`pharmaverseadam`) — no proprietary data involved, safe to run live.
+`pharmaverseadam`) — no proprietary data, safe to run live.
 
 The agent reads `skills/admiral/SKILL.md` (shared conventions) first, then the
 child skill for the dataset in question.
 
-[CONFIRM WITH JEFF: time budget for Section A.]
+[CONFIRM WITH JEFF: time budget for Section A within the 3-hour block.]
 :::
 
 ## Section A — how the skill behaves
@@ -366,7 +413,7 @@ say so and stop.
 
 Tools: gsDesign, gsDesign2, lrstat, graphicalMCP, jsonlite (R) + python-docx.
 
-[CONFIRM WITH ERIC: time budget for Section B.]
+[CONFIRM WITH ERIC: time budget for Section B within the 3-hour block.]
 :::
 
 ## Section B — how the skill behaves
@@ -421,6 +468,65 @@ Same disclaimer applies: a designed-and-verified draft is still a draft. The
 statistician owns the final design.
 :::
 
+# Section C — Modify, extend, and build a skill {.unnumbered}
+
+## Anatomy of a skill
+
+Everything the agent needs is plain text and scripts in one folder:
+
+``` text
+skills/admiral/admiral-adsl/
+├── SKILL.md                     # frontmatter + step-by-step workflow
+├── references/
+│   ├── admiral-functions.md     # function selection, pitfalls
+│   └── adsl-conventions.md      # CDISC variable conventions
+└── LICENSE
+```
+
+- **Frontmatter** (`name`, `description`) is how the agent decides when to
+  load the skill
+- **Workflow** is ordered steps with code patterns and `# REVIEW:` rules
+- **References** are read on demand, not upfront
+- A root `CLAUDE.md` routes the agent to the right skill
+
+::: {.notes}
+Open `skills/admiral/SKILL.md` and `skills/group-sequential-design/SKILL.md`
+side by side and point out the shared shape: routing / scope check, then an
+ordered workflow, then references and bundled scripts.
+:::
+
+## Section C — hands-on
+
+::: {.callout-important}
+Exercise content pending — to be defined by Jeff & Eric
+:::
+
+Two activities, instructor-supported:
+
+1. **Modify or extend an existing skill** — [CONFIRM: which skill, what change
+   — e.g. add an `AGEGR1` cut-point convention, add a new ADAE grouping flag,
+   add a futility-only GSD variant]
+2. **Sketch a skill of your own** — [CONFIRM: starter template / scaffold
+   provided? target task examples for different disciplines?]
+
+::: {.notes}
+DO NOT invent the specific modification or the starter task. Jeff and Eric to
+decide: the smallest meaningful edit to an existing skill, and a scaffold
+(frontmatter + empty workflow headings) attendees fill in for a task from
+their own work. Keep this achievable in ~15 minutes.
+:::
+
+## Section C — debrief
+
+- What made the existing skill easy or hard to change?
+- What is the smallest skill that would still be useful to you at work?
+- Where would a skill help most in your current workflow?
+
+::: {.notes}
+Bridge to the wrap-up: the goal is that people leave with a concrete idea they
+could prototype in the week after the workshop.
+:::
+
 # Wrap-up
 
 ## What you did today
@@ -428,7 +534,7 @@ statistician owns the final design.
 - Ran the **admiral** skills to derive ADaM datasets from SDTM
 - Ran the **group-sequential-design** skill to design and verify a survival
   trial
-- Saw the same interaction model work across two very different domains
+- Read a skill's internals, **modified** one, and **sketched** your own
 
 All driven by describing the task in natural language — the skill supplied the
 discipline.
@@ -436,13 +542,13 @@ discipline.
 ::: {.notes}
 Land the through-line: the value is not "AI writes code fast." It is that a
 reviewed, version-controlled workflow runs consistently every time, with review
-markers exactly where human judgment is required.
+markers exactly where human judgment is required — and that you can now build
+those workflows yourself.
 :::
 
 ## Take it with you
 
 - **Workshop repo:** <https://github.com/jeffreyad/rpharma-2026-workshop>
-  [CONFIRM WITH JEFF: canonical URL]
 - **pharma-skills:** <https://github.com/RConsortium/pharma-skills/tree/main>
   — full catalog, LIFECYCLE.md, benchmarking
 - **admiral:** <https://pharmaverse.github.io/admiral/> ·
@@ -458,8 +564,8 @@ npx skills add RConsortium/pharma-skills --skill admiral-adsl --skill group-sequ
 
 ::: {.notes}
 Also mention Option A from the repo README — open the repo as your project and
-let its CLAUDE.md route the agent to each skill; just set your local Rscript
-path for the GSD skill.
+let its CLAUDE.md route the agent to each skill; set your local Rscript path
+for the GSD skill.
 :::
 
 ## Disclaimer
@@ -481,17 +587,17 @@ slide for a pharma audience.
 
 ## Thank you
 
-**Jeff Dickinson**
-Navitas Data Sciences · admiral Core Team
+**Jeff Dickinson, PhD**
+Associate Director, Clinical Reporting · Navitas Data Sciences
 [CONFIRM WITH JEFF: contact — email / GitHub / LinkedIn]
 
-**Eric Zhang**
-[CONFIRM WITH ERIC: affiliation and contact]
+**Eric Zhang, PhD**
+Senior Director, Biostatistics · Eikon Therapeutics
+[CONFIRM WITH ERIC: contact — email / GitHub / LinkedIn]
 
 Questions?
 
 ::: {.notes}
-Leave this up during Q&A. Have the repo URL and the pharma-skills URL also
-written somewhere persistent (whiteboard / pinned chat message) for people
-photographing slides.
+Leave this up during Q&A. Post the repo URL and the pharma-skills URL in chat
+as a pinned message for people photographing / screenshotting slides.
 :::
