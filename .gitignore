@@ -16,6 +16,12 @@ __pycache__/
 gsd_report.docx
 gsd_results.json
 
+# Quarto render output
+/.quarto/
+/index.html
+/index_files/
+/_site/
+
 # OS / editor cruft
 .DS_Store
 Thumbs.db

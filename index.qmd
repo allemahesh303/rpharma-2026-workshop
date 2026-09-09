@@ -1,0 +1,493 @@
+---
+title: "AI Skills for Clinical Trial Design & ADaM Derivation"
+subtitle: "A hands-on workshop &middot; R/Pharma 2026"
+author:
+  - name: "Jeff Dickinson"
+    affiliations: "Navitas Data Sciences &middot; admiral Core Team"
+  - name: "Eric Zhang"
+    affiliations: "[CONFIRM WITH ERIC: affiliation]"
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+    number-sections: true
+    footer: "R/Pharma 2026 Workshop"
+    toc: false
+    width: 1200
+    height: 720
+    hash: true
+---
+
+# Welcome {.unnumbered}
+
+## AI Skills for Clinical Trial Design & ADaM Derivation
+
+**R/Pharma 2026 Workshop**
+
+Presenters:
+
+- **Jeff Dickinson** — Navitas Data Sciences; admiral Core Team
+- **Eric Zhang** — [CONFIRM WITH ERIC: affiliation / title]
+
+::: {.notes}
+Housekeeping to cover verbally: total session length, break schedule, how to
+ask for help during hands-on time, and where the repo lives.
+
+[CONFIRM WITH JEFF: exact workshop date, room, and session length so we can
+state it here or on a housekeeping slide.]
+
+One-line framing for the opening: this is a working session — by the end you
+will have run two production-style clinical-programming workflows end to end,
+driven entirely by describing the task to an AI agent in plain language.
+:::
+
+## What you will walk out with
+
+- A working mental model of what an **agent skill** is and why it changes
+  clinical programming
+- Hands-on experience running the **admiral ADaM skills** (ADSL → ADAE / BDS)
+- Hands-on experience running the **group sequential design skill** for a
+  survival trial
+- A local setup you can keep using after the workshop
+
+::: {.notes}
+Emphasise: these skills produce *drafting aids, not validated deliverables*.
+Everything the agent writes still goes through your own QC before any
+regulatory, clinical, or GxP-regulated use. We will repeat this point in each
+section.
+:::
+
+## Agenda
+
+1. Skills overview — what they are, why they matter
+2. Environment setup — sign in, launch Positron, check packages
+3. **Section A** — ADaM generation (Jeff)
+4. **Section B** — Group sequential design (Eric)
+5. Wrap-up and where to go next
+
+::: {.notes}
+[CONFIRM WITH JEFF/ERIC: time budget per section — fill in once total session
+length is known. Rough split to confirm: ~15 min overview, ~15 min setup,
+~45 min Section A, ~45 min Section B, ~10 min wrap-up.]
+:::
+
+# Skills overview
+
+## What is a "skill"?
+
+A **skill** is a reusable, model-agnostic workflow an AI coding agent loads
+on demand:
+
+- A `SKILL.md` file — step-by-step instructions for one class of task
+- Supporting **reference files** — conventions, function-selection logic,
+  failure modes
+- Bundled **scripts** — R / Python the agent runs in your environment
+
+The agent reads the skill only when your request matches it, then follows it
+instead of improvising.
+
+::: {.notes}
+Contrast with a raw prompt: a prompt is transient and lives in one person's
+head or chat history. A skill is version-controlled, reviewable, and encodes
+institutional knowledge — "here is how *we* derive ADSL" — so every run starts
+from the same vetted baseline.
+
+Analogy: an SOP that the agent actually executes, not just reads.
+:::
+
+## Why skills matter for clinical programming
+
+Clinical programming is high-stakes, convention-heavy, and traceability-driven.
+A skill lets you encode, once:
+
+- CDISC / ADaMIG conventions (`"Y"`/`NA` flags, study-day rules, date
+  imputation direction)
+- Function-selection logic (when `derive_vars_merged()` vs
+  `derive_vars_merged_lookup()`)
+- QC scaffolding (`stopifnot()` assertions, `# REVIEW:` markers at every
+  protocol-specific decision)
+
+The agent then reproduces that discipline on every run.
+
+::: {.notes}
+The point is consistency and traceability, not just speed. A skilled run
+produces code that already has review markers where a human must make a
+protocol call — the reviewer's attention is directed, not diffused.
+:::
+
+## Skills vs. no skills — the benchmarking evidence
+
+::: {.callout-note}
+[CONFIRM WITH JEFF: benchmark figures to be supplied — skill-delta gains and
+A/B comparison numbers from the pharma-skills benchmarking work. Do not
+present until Jeff provides the exact figures and framing.]
+:::
+
+Placeholder points to replace with real numbers:
+
+- Skill-delta gain (skilled vs. unskilled agent) on the ADaM tasks: **[figure]**
+- A/B comparison — what was measured, on which tasks: **[framing]**
+- Which output dimensions improved most (e.g. `# REVIEW:` coverage, function
+  choice, convention adherence): **[detail]**
+
+::: {.notes}
+Jeff to narrate the methodology: what the benchmark scored, how many tasks,
+skilled vs. unskilled conditions, and the headline delta. Keep the on-slide
+numbers minimal — details go in the talk track.
+:::
+
+## The source project: pharma-skills
+
+These skills come from the R Consortium **`pharma-skills`** project
+(Submissions Working Group, Pilot 7; with the BBSW AI committee).
+
+<https://github.com/RConsortium/pharma-skills/tree/main>
+
+The full catalog also includes `sdtm-oak`, `clinical-trial-simulation`,
+`statistical-reviewer`, `rounding`, and more, plus a skill development
+**lifecycle** and community benchmarking.
+
+::: {.notes}
+Every skill in this workshop repo is copied from pharma-skills without changes
+to its derivation logic. Credit: admiral skills — Jeff Dickinson (Navitas);
+group-sequential-design — Eric Zhang.
+
+Point people at the LIFECYCLE.md doc if they want to contribute a skill.
+:::
+
+## Two threads today
+
+::: {.columns}
+::: {.column width="50%"}
+### Section A — ADaM generation
+
+Derive analysis datasets from SDTM with **{admiral}**:
+
+- `admiral` (parent conventions)
+- `admiral-adsl` → `admiral-adae` → `admiral-bds`
+
+Output: QC-ready, review-annotated R.
+:::
+::: {.column width="50%"}
+### Section B — Group sequential design
+
+Design a survival trial with **gsDesign / gsDesign2 / lrstat**:
+
+- Spending-function boundaries, sample size, multiplicity
+- Simulation-based verification
+- Template-driven Word report
+:::
+:::
+
+::: {.notes}
+Both threads share the same interaction model: you describe the task in
+natural language, the agent loads the matching skill, and you review what it
+produces. The domains differ; the workflow does not.
+:::
+
+# Environment setup
+
+## 1. Sign in to Posit Workbench
+
+Go to **<https://workshop.posit.team/>** and sign in.
+
+- Choose **Sign in with OpenID** *or* **Sign in with GitHub**
+- Use the same account for the whole session
+
+::: {.notes}
+Mirror the reference deck's sign-in style: walk the room through it live,
+confirm everyone is in before moving on. If someone's GitHub sign-in fails,
+have them try the OpenID option.
+
+[CONFIRM WITH JEFF: is there a per-attendee username/password, an access code,
+or is it self-service GitHub/OpenID only? Confirm the exact wording of the
+sign-in options shown on workshop.posit.team.]
+:::
+
+## 2. Launch a Positron session
+
+In Workbench, start a new session and choose the **Positron** IDE.
+
+**Why Positron?** It supports **both R and Python** in one IDE — Section A is
+R (admiral), and Section B's report generator is Python (`python-docx`). One
+session covers both threads.
+
+::: {.notes}
+[CONFIRM WITH JEFF: session resource preset to pick (CPU / memory), and the
+project / working directory attendees should land in — e.g. a pre-cloned
+copy of this repo, or do they clone it themselves as the first step?]
+
+If attendees clone it themselves:
+`git clone https://github.com/jeffreyad/rpharma-2026-workshop.git`
+[CONFIRM WITH JEFF: canonical repo URL.]
+:::
+
+## 3. Run the setup check
+
+From the repo root, run the environment check script:
+
+``` r
+source("check_setup.R")   # [CONFIRM WITH JEFF: script does not exist yet]
+```
+
+It should verify:
+
+- R &ge; 4.2 and the admiral package set (`admiral`, `dplyr`, `lubridate`,
+  `pharmaversesdtm`, `pharmaverseadam`, …)
+- The GSD package set (`gsDesign`, `gsDesign2`, `lrstat`, `graphicalMCP`,
+  `jsonlite`)
+- Python &ge; 3.8 with `python-docx`
+
+::: {.notes}
+OPEN ITEM: `check_setup.R` is not written yet. Decision needed from Jeff:
+(a) draft it from the README package lists (R version check + `requireNamespace`
+loop + Python/`python-docx` check + pass/fail summary), or (b) rely on a
+pre-provisioned image where everything is already installed and skip this slide.
+
+If the environment is pre-provisioned, this slide becomes "everything is
+already installed — here's how to confirm."
+:::
+
+## You should now see…
+
+::: {.callout-tip}
+Ready-state checklist
+:::
+
+- Positron open in your browser, with the workshop repo in the Explorer
+- `check_setup.R` output showing **all checks passed** (no red)
+- An R console and a Python console both available
+
+::: {.notes}
+[CONFIRM WITH JEFF: replace with an actual screenshot of the ready state, or a
+precise description of what attendees see. Consider a projected reference image
+so people can self-check without flagging down a helper.]
+
+Do not start Section A until everyone confirms this slide.
+:::
+
+# Section A — ADaM generation {.unnumbered}
+
+## Section A — what we'll do
+
+Drive the **admiral** skill family to derive ADaM datasets from SDTM:
+
+| Skill | Produces | Depends on |
+|---|---|---|
+| `admiral` (parent) | Shared conventions — no output | — |
+| `admiral-adsl` | ADSL (subject-level) | SDTM DM, EX, DS |
+| `admiral-adae` | ADAE (adverse events, TEAE flag) | ADSL + SDTM AE |
+| `admiral-bds` | ADVS / ADLB (BDS findings) | ADSL + SDTM VS / LB |
+
+**ADSL must be derived first** — its treatment vars and population flags feed
+every downstream dataset.
+
+::: {.notes}
+Source data is the pharmaverse public CDISC test data (`pharmaversesdtm` /
+`pharmaverseadam`) — no proprietary data involved, safe to run live.
+
+The agent reads `skills/admiral/SKILL.md` (shared conventions) first, then the
+child skill for the dataset in question.
+
+[CONFIRM WITH JEFF: time budget for Section A.]
+:::
+
+## Section A — how the skill behaves
+
+When you ask for a derivation, the skilled agent will:
+
+- Generate code **section by section**, not one giant block
+- Use the native pipe `|>` and `exprs()` for admiral verb arguments
+- Use admiral date functions (never `as.Date()` on `--DTC`)
+- Emit `"Y"`/`NA` flags — never `"N"`
+- Drop a **`# REVIEW:`** comment at every protocol-specific decision
+- Add `stopifnot()` assertions (one row per USUBJID, source uniqueness, …)
+
+::: {.notes}
+Tell attendees what to look for when reviewing: the `# REVIEW:` markers are
+where *they* — not the agent — own the decision (population flag definitions,
+disposition mapping, age cut-points, TEAE window). The skill deliberately does
+not guess these.
+:::
+
+## Section A — hands-on exercise
+
+::: {.callout-important}
+Exercise content pending — to be supplied by Jeff
+:::
+
+Needs to be specified before this deck is final:
+
+- Exact prompt(s) attendees give the agent
+- Which SDTM domains / dataset (pharmaversesdtm `dm`/`ex`/`ds`/`ae`/`vs`/`lb`?)
+- Step sequence: ADSL first, then ADAE and/or BDS?
+- What "done" looks like — which variables / checks to verify
+- Stretch goal for fast finishers
+
+::: {.notes}
+DO NOT invent exercise steps. Jeff to provide the exact walkthrough — prompts,
+expected agent behaviour, review checkpoints, and the QC the attendee runs at
+the end. Once provided, expand this into the needed number of step slides.
+:::
+
+## Section A — debrief
+
+- Where did the agent place `# REVIEW:` markers, and were they the right places?
+- What did *you* have to decide that the skill correctly refused to guess?
+- How does this compare to writing the derivation from scratch?
+
+::: {.notes}
+Reinforce the disclaimer: the output is a drafting aid. Independent QC against
+your own process is still required before any regulated use.
+:::
+
+# Section B — Group sequential design {.unnumbered}
+
+## Section B — what we'll do
+
+Drive the **group-sequential-design** skill to design a survival trial:
+
+- Survival endpoints (OS / PFS / DFS), interim + final analyses
+- Alpha-spending boundaries (Lan-DeMets, Hwang-Shih-DeCani)
+- Sample-size / event targets (N-first approach)
+- Graphical multiplicity for co-primary / multi-population designs
+- **`lrstat` simulation** to verify the analytic design
+- A template-driven **Word report** (`gsd_report.py`)
+
+::: {.notes}
+Scope note the skill enforces: standard group sequential designs only. Adaptive
+enrichment, sample-size re-estimation, seamless dose-selection, platform trials,
+and non-survival primary endpoints are explicitly out of scope — the skill will
+say so and stop.
+
+Tools: gsDesign, gsDesign2, lrstat, graphicalMCP, jsonlite (R) + python-docx.
+
+[CONFIRM WITH ERIC: time budget for Section B.]
+:::
+
+## Section B — how the skill behaves
+
+- Asks design questions **one at a time**, in plain language, no defaults
+  offered
+- Summarises all inputs in a table and waits for your confirmation
+- Computes the design, then **checks interim-analysis timing** against
+  enrollment and minimum-gap constraints
+- **Verifies by simulation** before delivering — power within ±2 pp, type I
+  error within ±0.5 pp
+- Writes every number to `gsd_results.json`; the report reads from there (no
+  hardcoded values)
+
+::: {.notes}
+The one-artifact-per-turn pacing in the skill means the agent writes a script,
+stops, runs it, stops, etc. That is intentional — it keeps each step
+reviewable.
+:::
+
+## Section B — hands-on exercise
+
+::: {.callout-important}
+Exercise content pending — to be supplied and reviewed by Eric
+:::
+
+Needs to be specified before this deck is final:
+
+- The trial scenario (disease, line of therapy, endpoint(s), HR, medians)
+- Single vs. co-primary; single vs. multi-population
+- Which design decisions attendees make vs. which are pre-set
+- Expected outputs to inspect (`gsd_results.json`, multiplicity diagram,
+  `gsd_report.docx`)
+- Stretch goal (e.g. an NPH sensitivity evaluation)
+
+::: {.notes}
+FLAG: this section needs Eric's direct input and review. Do not draft a
+scenario — the Q&A flow, the specific numbers, and the "what good looks like"
+checkpoints should be Eric's. Once provided, expand into step slides mirroring
+Section A's structure.
+:::
+
+## Section B — debrief
+
+- Which constraint was binding — event target, minimum follow-up, or
+  minimum gap?
+- Did the simulation confirm the analytic design on the first try?
+- What would you change about the design, and what lever would you pull?
+
+::: {.notes}
+Same disclaimer applies: a designed-and-verified draft is still a draft. The
+statistician owns the final design.
+:::
+
+# Wrap-up
+
+## What you did today
+
+- Ran the **admiral** skills to derive ADaM datasets from SDTM
+- Ran the **group-sequential-design** skill to design and verify a survival
+  trial
+- Saw the same interaction model work across two very different domains
+
+All driven by describing the task in natural language — the skill supplied the
+discipline.
+
+::: {.notes}
+Land the through-line: the value is not "AI writes code fast." It is that a
+reviewed, version-controlled workflow runs consistently every time, with review
+markers exactly where human judgment is required.
+:::
+
+## Take it with you
+
+- **Workshop repo:** <https://github.com/jeffreyad/rpharma-2026-workshop>
+  [CONFIRM WITH JEFF: canonical URL]
+- **pharma-skills:** <https://github.com/RConsortium/pharma-skills/tree/main>
+  — full catalog, LIFECYCLE.md, benchmarking
+- **admiral:** <https://pharmaverse.github.io/admiral/> ·
+  [CDISC ADaMIG v1.3](https://www.cdisc.org/standards/foundational/adam)
+- **gsDesign / gsDesign2 / lrstat:** on CRAN
+- **Submissions Working Group:** <https://rconsortium.github.io/submissions-wg/>
+
+Install into your own project:
+
+``` bash
+npx skills add RConsortium/pharma-skills --skill admiral-adsl --skill group-sequential-design
+```
+
+::: {.notes}
+Also mention Option A from the repo README — open the repo as your project and
+let its CLAUDE.md route the agent to each skill; just set your local Rscript
+path for the GSD skill.
+:::
+
+## Disclaimer
+
+These skills produce **drafting aids, not validated deliverables**.
+
+LLM output can be wrong or vary between runs. Independently verify all
+generated code and results against your own QC process before they inform any
+regulatory, clinical, safety, or GxP-regulated activity, and comply with your
+organization's policies.
+
+The skills bundle scripts that execute in your environment — review a skill's
+contents before running it, and only supply data you are permitted to use.
+
+::: {.notes}
+Say this one out loud, verbatim if needed. It is the single most important
+slide for a pharma audience.
+:::
+
+## Thank you
+
+**Jeff Dickinson**
+Navitas Data Sciences · admiral Core Team
+[CONFIRM WITH JEFF: contact — email / GitHub / LinkedIn]
+
+**Eric Zhang**
+[CONFIRM WITH ERIC: affiliation and contact]
+
+Questions?
+
+::: {.notes}
+Leave this up during Q&A. Have the repo URL and the pharma-skills URL also
+written somewhere persistent (whiteboard / pinned chat message) for people
+photographing slides.
+:::
