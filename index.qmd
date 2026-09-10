@@ -152,25 +152,77 @@ encodes scope checks, the N-first algorithm, IA-timing constraints, and a
 mandatory simulation-verification step.
 :::
 
-## Skills vs. no skills — the benchmarking evidence
+## Skills vs. no skills — ADaM benchmarks
 
-::: {.callout-note}
-[CONFIRM WITH JEFF: benchmark figures to be supplied — skill-delta gains and
-A/B comparison numbers from the pharma-skills benchmarking work. Do not
-present until Jeff provides the exact figures and framing.]
-:::
+Community A/B benchmarks in `pharma-skills` — the **same task**, an agent
+**with** vs **without** the skill, scored against a methodology rubric:
 
-Placeholder points to replace with real numbers:
+| Skill / task | With skill | Without skill |
+|---|---|---|
+| ADSL derivation (34-point rubric) | **100%** | 62% |
+| ADSL safety flags — SAFFL / ITTFL / PPROTFL | **83%** | 46% |
+| ADAE derivation | **94%** | 33% |
+| ADLB derivation | **94%** | 48% |
+| ADVS (BDS) derivation | **88%** | 36% |
 
-- Skill-delta gain (skilled vs. unskilled agent) on the ADaM tasks: **[figure]**
-- A/B comparison — what was measured, on which tasks: **[framing]**
-- Which output dimensions improved most (e.g. `# REVIEW:` coverage, function
-  choice, convention adherence): **[detail]**
+The gap is mostly **admiral-idiom compliance + QC annotations**, not whether
+the numbers come out right.
 
 ::: {.notes}
-Jeff to narrate the methodology: what the benchmark scored, how many tasks,
-skilled vs. unskilled conditions, and the headline delta. Keep the on-slide
-numbers minimal — details go in the talk track.
+Source: `benchmark-runner` results posted as comments on the `[benchmark]`
+issues in RConsortium/pharma-skills — #137, #147, #148, #149, #126, #165.
+Single runs, `claude-sonnet-4-6`, `pharmaversesdtm` → `pharmaverseadam` data,
+May–Jul 2026; skill versions vary by run.
+
+[CONFIRM WITH JEFF: confirm these are the runs/numbers you want on-slide, and
+whether to cite a specific skill SHA / date.]
+
+What the gap actually is: both agents usually compute the *right values*. The
+skill-guided agent uses admiral functions, places `# REVIEW:` comments at every
+protocol-specific decision, and adds `stopifnot()` QC guards; the unaided agent
+uses base dplyr/lubridate, no review markers, and sometimes leaves DOMAIN in or
+keeps SDTM `"Y"/"N"` flags — code that would draw immediate QC findings.
+
+Honest caveats to say out loud:
+
+- On short rubrics or template-shaped tasks (basic two-arm ADSL, the admiral
+  ADVS vignette pattern, trivial `derive_vars_cat` / `compute_rr` conversions)
+  the measured gap is **~zero** — the base model already knows these.
+- The skill runs roughly 1.5–9× more tokens.
+- A couple of individual runs the skill scored slightly *worse* (e.g. duplicate
+  baseline flags) — this is A/B benchmarking, not a guaranteed win every time.
+:::
+
+## Skills vs. no skills — group sequential design
+
+`group-sequential-design` skill — 15 trial-design scenarios, 3 models
+(Claude Sonnet / Opus, Gemini Flash), April 2026:
+
+| | With skill | Without skill |
+|---|---|---|
+| Avg score across scenarios | **73%** | 51% |
+| Scenario wins | **10** | 3 |
+| Ties | 2 | 2 |
+
+Standouts: **83% vs 0%** — no-skill crashed on `gsSurv()` across 7 attempts;
+**100% vs 44%** — skill self-detected non-proportional hazards and sized 390
+events vs 229 (the no-skill design would run at ~28% power).
+
+::: {.notes}
+Source: `benchmark_analysis_2026-04-28.md` in RConsortium/pharma-skills.
+
+All 3 no-skill "wins" were skill scope-gaps (adaptive enrichment, a
+futility-only subgroup look) or a sandbox routing bug — not base-model
+superiority.
+
+What the skill reliably added across the wins: correct `gsSurv()`
+parameterisation (unequal allocation, piecewise hazard, non-constant
+enrollment); enforced structured artifacts (JSON + multiplicity PNG + Word
+report); PFS-overpower detection with alpha-reallocation guidance; and a
+mandatory 5,000–10,000-rep simulation-verification step.
+
+[CONFIRM WITH ERIC: OK to present these GSD numbers, or do you want a
+newer run?]
 :::
 
 ## The source project: pharma-skills
