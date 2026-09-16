@@ -313,7 +313,27 @@ self-service GitHub/OpenID only? Confirm the exact wording of the sign-in
 options shown on workshop.posit.team.]
 :::
 
-## 2. Open your Positron session
+## 2. Fork the workshop repo
+
+On GitHub, fork **jeffreyad/rpharma-2026-workshop** to your own account.
+
+- Section C has you modify and sketch a skill — forking gives you somewhere
+  of your own to keep that work after the session ends
+- You're already signed in with GitHub/OpenID, so this is one extra click
+- Optional stretch: open a PR back to the source **pharma-skills** project
+
+::: {.notes}
+[CONFIRM WITH JEFF: is this step actually needed, or does the preconfigured
+environment already persist each attendee's work some other way (e.g. a
+per-user workspace that survives session end)? If it does, cut this slide —
+don't add GitHub mechanics to a 3-hour session unless they buy something.
+
+If we keep it: fork on github.com takes a few clicks and can happen before or
+while Positron is loading. The next step then clones *the attendee's fork*,
+not the upstream repo, so `git push` works without a permissions prompt.]
+:::
+
+## 3. Open your Positron session
 
 In Workbench, start the session and choose the **Positron** IDE.
 
@@ -321,13 +341,19 @@ In Workbench, start the session and choose the **Positron** IDE.
 Section B's report generator is Python (`python-docx`), and Section C touches
 both. One session covers everything.
 
+``` bash
+git clone https://github.com/<your-username>/rpharma-2026-workshop.git
+```
+
 ::: {.notes}
-[CONFIRM WITH JEFF: does each attendee land in a pre-cloned copy of the
-workshop repo, or clone it themselves as step one?
-`git clone https://github.com/jeffreyad/rpharma-2026-workshop.git`]
+[CONFIRM WITH JEFF: does each attendee land in a pre-cloned copy already, or
+clone their own fork as shown here? If pre-cloned, add a step to point the
+`origin` remote at their fork (or add it as a second remote) so Section C work
+can still be pushed somewhere persistent:
+`git remote set-url origin https://github.com/<your-username>/rpharma-2026-workshop.git`]
 :::
 
-## 3. Confirm you're ready
+## 4. Confirm you're ready
 
 From the repo root:
 
@@ -357,7 +383,8 @@ issue, not something you fix.
 Ready-state checklist
 :::
 
-- Positron open in your browser, with the workshop repo in the Explorer
+- Positron open in your browser, with **your fork** of the workshop repo in
+  the Explorer
 - `check_setup.R` output showing **all checks passed** (no red)
 - An R console and a Python console both available
 
@@ -561,11 +588,18 @@ Two activities, instructor-supported:
 2. **Sketch a skill of your own** — [CONFIRM: starter template / scaffold
    provided? target task examples for different disciplines?]
 
+Commit and push to **your fork** as you go — that's what keeps this after
+today.
+
 ::: {.notes}
 DO NOT invent the specific modification or the starter task. Jeff and Eric to
 decide: the smallest meaningful edit to an existing skill, and a scaffold
 (frontmatter + empty workflow headings) attendees fill in for a task from
 their own work. Keep this achievable in ~15 minutes.
+
+[CONFIRM WITH JEFF: if the "fork the repo" step (Environment orientation, #2)
+is cut, replace this line with however work actually persists — e.g. "download
+your skill folder" or "it stays in your Workbench home directory."]
 :::
 
 ## Section C — debrief
@@ -600,6 +634,7 @@ those workflows yourself.
 
 ## Take it with you
 
+- **Your fork** — has your Section C work; keep building on it
 - **Workshop repo:** <https://github.com/jeffreyad/rpharma-2026-workshop>
 - **pharma-skills:** <https://github.com/RConsortium/pharma-skills/tree/main>
   — full catalog, LIFECYCLE.md, benchmarking
