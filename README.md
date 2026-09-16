@@ -8,6 +8,8 @@ A hands-on workshop, to be delivered at **R/Pharma 2026**, on using Claude Code
 2. **Designing group sequential trials** for survival endpoints — boundaries,
    sample size, multiplicity, and simulation-based verification.
 
+**Slides:** <https://jeffreyad.github.io/rpharma-2026-workshop/>
+
 ## What you'll learn
 
 - What an agent *skill* is (a `SKILL.md` workflow plus supporting references and
