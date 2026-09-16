@@ -319,7 +319,10 @@ On GitHub, fork **jeffreyad/rpharma-2026-workshop** to your own account.
 
 - Section C has you modify and sketch a skill — forking gives you somewhere
   of your own to keep that work after the session ends
-- You're already signed in with GitHub/OpenID, so this is one extra click
+- If you signed in above with GitHub, you already have an account — one extra
+  click. **No GitHub account?** Sign up free at
+  **<https://github.com/signup>** (about a minute) — you'll need one for this
+  step regardless of how you signed in to Workbench
 - Optional stretch: open a PR back to the source **pharma-skills** project
 
 ::: {.notes}
@@ -330,7 +333,11 @@ don't add GitHub mechanics to a 3-hour session unless they buy something.
 
 If we keep it: fork on github.com takes a few clicks and can happen before or
 while Positron is loading. The next step then clones *the attendee's fork*,
-not the upstream repo, so `git push` works without a permissions prompt.]
+not the upstream repo, so `git push` works without a permissions prompt.
+
+Worth flagging in chat at the top of orientation: anyone who signed in via
+OpenID (not GitHub) will need a free GitHub account for this step specifically
+— point them to github.com/signup before you start walking through the fork.]
 :::
 
 ## 3. Open your Positron session
