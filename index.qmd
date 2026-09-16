@@ -50,7 +50,6 @@ language — and you will have modified a skill and sketched one of your own.
 - **Run AI skills on real-world exercises** — ADaM generation and group
   sequential design
 - **See how skills are structured** and how they interact with the AI model
-- **Modify or extend** an existing skill
 - **Create a simple skill of your own**, with instructor support
 - Leave with **practical ideas** for applying AI skills to your own work
 
