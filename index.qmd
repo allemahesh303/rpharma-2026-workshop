@@ -50,8 +50,7 @@ language — and you will have modified a skill and sketched one of your own.
 - **Run AI skills on real-world exercises** — ADaM generation and group
   sequential design
 - **See how skills are structured** and how they interact with the AI model
-- **Modify or extend** an existing skill
-- **Create a simple skill of your own**, with instructor support
+- **Practice using the skills**, with instructor support
 - Leave with **practical ideas** for applying AI skills to your own work
 
 *No prior AI-skills experience required.*
@@ -87,7 +86,7 @@ environment is preconfigured so no one loses time on setup.
 2. Environment orientation — sign in, confirm you're ready
 3. **Section A** — ADaM generation (Jeff)
 4. **Section B** — Group sequential design (Eric)
-5. **Section C** — Modify, extend, and build a skill
+5. **Section C** — Practice using the skills
 6. Wrap-up — ideas to take back
 
 Three hours, one break near the midpoint.
@@ -195,34 +194,19 @@ Honest caveats to say out loud:
 
 ## Skills vs. no skills — group sequential design
 
-`group-sequential-design` skill — 15 trial-design scenarios, 3 models
-(Claude Sonnet / Opus, Gemini Flash), April 2026:
+`group-sequential-design` skill — 21 trial-design scenarios, 3 models
+(Claude Sonnet / Opus, Gemini Flash), May 2026:
 
 | | With skill | Without skill |
 |---|---|---|
-| Avg score across scenarios | **73%** | 51% |
-| Scenario wins | **10** | 3 |
-| Ties | 2 | 2 |
+| Avg score across scenarios | **90%** | 62% |
+| Scenario wins | **16** | 1 |
+| Ties | 4 | 4 |
 
-Standouts: **83% vs 0%** — no-skill crashed on `gsSurv()` across 7 attempts;
-**100% vs 44%** — skill self-detected non-proportional hazards and sized 390
-events vs 229 (the no-skill design would run at ~28% power).
+
 
 ::: {.notes}
-Source: `benchmark_analysis_2026-04-28.md` in RConsortium/pharma-skills.
-
-All 3 no-skill "wins" were skill scope-gaps (adaptive enrichment, a
-futility-only subgroup look) or a sandbox routing bug — not base-model
-superiority.
-
-What the skill reliably added across the wins: correct `gsSurv()`
-parameterisation (unequal allocation, piecewise hazard, non-constant
-enrollment); enforced structured artifacts (JSON + multiplicity PNG + Word
-report); PFS-overpower detection with alpha-reallocation guidance; and a
-mandatory 5,000–10,000-rep simulation-verification step.
-
-[CONFIRM WITH ERIC: OK to present these GSD numbers, or do you want a
-newer run?]
+[EZ]: Updated the model run results
 :::
 
 ## The source project: pharma-skills
@@ -265,10 +249,9 @@ Design a survival trial with **gsDesign / gsDesign2 / lrstat**:
 - Simulation verification + Word report
 :::
 ::: {.column width="33%"}
-### C &middot; Build a skill
+### C &middot; practice with the skills
 
-- Read a `SKILL.md` and its references
-- Modify / extend one
+- try skills with an example
 - Sketch your own
 :::
 :::
@@ -532,18 +515,9 @@ reviewable.
 
 ## Section B — hands-on exercise
 
-::: {.callout-important}
-Exercise content pending — to be supplied and reviewed by Eric
-:::
+Let's design a Phase 3 Oncology trial
 
-Needs to be specified before this deck is final:
 
-- The trial scenario (disease, line of therapy, endpoint(s), HR, medians)
-- Single vs. co-primary; single vs. multi-population
-- Which design decisions attendees make vs. which are pre-set
-- Expected outputs to inspect (`gsd_results.json`, multiplicity diagram,
-  `gsd_report.docx`)
-- Stretch goal (e.g. an NPH sensitivity evaluation)
 
 ::: {.notes}
 FLAG: this section needs Eric's direct input and review. Do not draft a
@@ -554,10 +528,9 @@ Section A's structure.
 
 ## Section B — debrief
 
-- Which constraint was binding — event target, minimum follow-up, or
-  minimum gap?
-- Did the simulation confirm the analytic design on the first try?
-- What would you change about the design, and what lever would you pull?
+- Are the questions asked by the skill helpful?
+- Do the outputs include everything you need?
+- Can you apply this skill to your workflow?
 
 ::: {.notes}
 Same disclaimer applies: a designed-and-verified draft is still a draft. The
