@@ -7,7 +7,8 @@
 # and Python + python-docx for the GSD Word-report step. Prints a pass/fail
 # summary. If every line is [ OK ] you are ready to start.
 #
-# This only checks; it installs nothing. See README.md for install commands.
+# This only checks; it installs nothing. If R packages are missing, it tells
+# you to run:  Rscript install_packages.R  — then re-run this script.
 # --------------------------------------------------------------------------
 
 # Base R only — no dependency on any package being installed yet.
@@ -17,10 +18,12 @@
 
 `%||%` <- function(a, b) if (is.null(a) || length(a) == 0 || is.na(a)) b else a
 
-record <- function(status, label, detail = "") {
+record <- function(status, label, detail = "", fix = NULL) {
   # status: "OK", "FAIL", or "WARN"
+  # fix: shell/R command that resolves this specific failure, shown in the
+  #   summary — leave NULL when there isn't one (e.g. "upgrade R itself").
   .results$rows[[length(.results$rows) + 1]] <- list(
-    status = status, label = label, detail = detail
+    status = status, label = label, detail = detail, fix = fix
   )
   tag <- switch(status,
     OK   = "[ OK ]",
@@ -36,13 +39,14 @@ check_pkg <- function(pkg, min_version = NULL, group = "") {
   label <- if (nzchar(group)) sprintf("%s (%s)", pkg, group) else pkg
   ok <- requireNamespace(pkg, quietly = TRUE)
   if (!ok) {
-    record("FAIL", label, "not installed")
+    record("FAIL", label, "not installed", fix = "Rscript install_packages.R")
     return(invisible(FALSE))
   }
   ver <- tryCatch(as.character(utils::packageVersion(pkg)), error = function(e) NA_character_)
   if (!is.null(min_version) && !is.na(ver) &&
       utils::compareVersion(ver, min_version) < 0) {
-    record("WARN", label, sprintf("%s installed; >= %s expected", ver, min_version))
+    record("WARN", label, sprintf("%s installed; >= %s expected", ver, min_version),
+           fix = "Rscript install_packages.R")
     return(invisible(FALSE))
   }
   record("OK", label, ver %||% "installed")
@@ -116,6 +120,7 @@ if (is.null(py)) {
   record("FAIL", "python-docx", "skipped — Python not available")
 } else {
   cmd_str <- paste(py$cmd, collapse = " ")
+  pip_fix <- sprintf("%s -m pip install --user python-docx", py$cmd[1])
   if (isTRUE(py$ok_version)) {
     record("OK", "python", sprintf("%s (%s)", py$version, cmd_str))
   } else {
@@ -129,7 +134,7 @@ if (is.null(py)) {
   if (isTRUE(docx_ok)) {
     record("OK", "python-docx", "import docx OK")
   } else {
-    record("FAIL", "python-docx", "cannot 'import docx' — pip install python-docx")
+    record("FAIL", "python-docx", "cannot 'import docx'", fix = pip_fix)
   }
 }
 
@@ -148,11 +153,36 @@ if (n_fail == 0 && n_warn == 0) {
 } else if (n_fail == 0) {
   message("No blockers, but review the WARN lines above.")
 } else {
-  message("Some checks FAILED. Fix these before the workshop:")
-  for (r in .results$rows) {
-    if (r$status == "FAIL") message("  - ", r$label, ": ", r$detail)
+  bad <- Filter(function(r) r$status %in% c("FAIL", "WARN"), .results$rows)
+  fixes <- unique(vapply(bad, function(r) r$fix %||% "", character(1)))
+  fixes <- fixes[nzchar(fixes)]
+
+  if (length(fixes) > 0) {
+    message("ACTION NEEDED — run this, then re-run check_setup.R:\n")
+    for (f in fixes) message("    ", f)
+    message("")
   }
-  message("\nInstall commands are in README.md.")
+
+  message("Full list of what's failing:")
+  for (r in bad) {
+    line <- sprintf("  - [%s] %s: %s", r$status, r$label, r$detail)
+    if (!is.null(r$fix)) line <- paste0(line, "  -->  ", r$fix)
+    message(line)
+  }
+
+  # R version has no scripted fix — call it out explicitly so it isn't lost
+  # in the noise above, since it blocks everything else on this machine.
+  r_ver_bad <- any(vapply(bad, function(r) r$label == "R version", logical(1)))
+  if (r_ver_bad) {
+    message("\nR itself is too old — install_packages.R can't fix that.",
+            " Install R >= 4.2 from https://cran.r-project.org/ first.")
+  }
+  py_missing <- any(vapply(bad, function(r) r$label == "python" && r$status == "FAIL", logical(1)))
+  if (py_missing) {
+    message("\nNo Python found on PATH — install_packages.R only covers R",
+            " packages. Install Python >= 3.8 from https://python.org/ first,",
+            " then  pip install python-docx.")
+  }
 }
 message(strrep("-", 60))
 
