@@ -375,13 +375,23 @@ Prints `[ OK ]` / `[WARN]` / `[FAIL]` per line for:
 - The GSD set (`gsDesign`, `gsDesign2`, `lrstat`, `graphicalMCP`, `jsonlite`)
 - Python &ge; 3.8 with `python-docx`
 
-In the preconfigured environment every line should be **`[ OK ]`**.
+In the preconfigured environment every line should be **`[ OK ]`**. Any
+`[FAIL]` prints the exact fix — usually:
+
+``` r
+Rscript install_packages.R
+```
 
 ::: {.notes}
-`check_setup.R` is base-R only and installs nothing — it just reports. It
-exists as a fast confidence check that your session is intact. If anything is
-`[FAIL]` in the workshop environment, flag it in chat — that's an environment
-issue, not something you fix.
+`check_setup.R` is base-R only and installs nothing — it just reports and
+tells you what to run. `install_packages.R` only installs what's missing or
+outdated, so it's safe to let attendees try the printed fix once, even in a
+preconfigured environment with an unexpected gap.
+
+If it doesn't clear in a minute or two, or the failure is Python or R itself
+(`install_packages.R` can't fix either — `check_setup.R` says so explicitly),
+stop there: flag it in chat rather than troubleshooting solo. That's an
+environment issue for us to fix live, not something to debug on your own time.
 :::
 
 ## You should now see…
@@ -655,6 +665,10 @@ Install into your own project:
 ``` bash
 npx skills add RConsortium/pharma-skills --skill admiral-adsl --skill group-sequential-design
 ```
+
+Running the workshop repo itself on your own machine (rather than the cloud
+environment)? Your fork has `install_packages.R` + `check_setup.R` and a full
+troubleshooting guide in `INSTALL.md`.
 
 ::: {.notes}
 Also mention Option A from the repo README — open the repo as your project and
