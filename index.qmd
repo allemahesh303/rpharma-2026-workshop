@@ -75,7 +75,7 @@ Pick the exercises closest to your work — the ADaM thread, the group
 sequential design thread, or both.
 
 ::: {.notes}
-Set expectations: programmers may go deep on Section A, statisticians on
+Set expectations: statisticians may go deep on Section A, programmers on
 Section B, and everyone converges for the skill-authoring section. The
 environment is preconfigured so no one loses time on setup.
 :::
@@ -84,8 +84,8 @@ environment is preconfigured so no one loses time on setup.
 
 1. Skills overview — what they are, why they matter
 2. Environment orientation — sign in, confirm you're ready
-3. **Section A** — ADaM generation (Jeff)
-4. **Section B** — Group sequential design (Eric)
+3. **Section A** — Group sequential design (Eric)
+4. **Section B** — ADaM generation (Jeff)
 5. **Section C** — Practice using the skills
 6. Wrap-up — ideas to take back
 
@@ -96,9 +96,9 @@ Three hours, one break near the midpoint.
 
 - 8:00–8:25  Welcome + skills overview
 - 8:25–8:40  Environment orientation
-- 8:40–9:35  Section A — ADaM
+- 8:40–9:35  Section A — group sequential design
 - 9:35–9:45  Break
-- 9:45–10:40 Section B — group sequential design
+- 9:45–10:40 Section B — ADaM
 - 10:40–10:55 Section C — modify / build a skill
 - 10:55–11:00 Wrap-up
 :::
@@ -151,6 +151,23 @@ encodes scope checks, the N-first algorithm, IA-timing constraints, and a
 mandatory simulation-verification step.
 :::
 
+## Skills vs. no skills — group sequential design
+
+`group-sequential-design` skill — 21 trial-design scenarios, 3 models
+(Claude Sonnet / Opus, Gemini Flash), May 2026:
+
+| | With skill | Without skill |
+|---|---|---|
+| Avg score across scenarios | **90%** | 62% |
+| Scenario wins | **16** | 1 |
+| Ties | 4 | 4 |
+
+
+
+::: {.notes}
+[EZ]: Updated the model run results
+:::
+
 ## Skills vs. no skills — ADaM benchmarks
 
 Community A/B benchmarks in `pharma-skills` — the **same task**, an agent
@@ -192,23 +209,6 @@ Honest caveats to say out loud:
   baseline flags) — this is A/B benchmarking, not a guaranteed win every time.
 :::
 
-## Skills vs. no skills — group sequential design
-
-`group-sequential-design` skill — 21 trial-design scenarios, 3 models
-(Claude Sonnet / Opus, Gemini Flash), May 2026:
-
-| | With skill | Without skill |
-|---|---|---|
-| Avg score across scenarios | **90%** | 62% |
-| Scenario wins | **16** | 1 |
-| Ties | 4 | 4 |
-
-
-
-::: {.notes}
-[EZ]: Updated the model run results
-:::
-
 ## The source project: pharma-skills
 
 These skills come from the R Consortium **`pharma-skills`** project
@@ -233,20 +233,20 @@ to Section C.
 
 ::: {.columns}
 ::: {.column width="33%"}
-### A &middot; ADaM generation
-
-Derive analysis datasets from SDTM with **{admiral}**:
-
-- `admiral` (parent)
-- `admiral-adsl` → `admiral-adae` → `admiral-bds`
-:::
-::: {.column width="33%"}
-### B &middot; Group sequential design
+### A &middot; Group sequential design
 
 Design a survival trial with **gsDesign / gsDesign2 / lrstat**:
 
 - Boundaries, sample size, multiplicity
 - Simulation verification + Word report
+:::
+::: {.column width="33%"}
+### B &middot; ADaM generation
+
+Derive analysis datasets from SDTM with **{admiral}**:
+
+- `admiral` (parent)
+- `admiral-adsl` → `admiral-adae` → `admiral-bds`
 :::
 ::: {.column width="33%"}
 ### C &middot; practice with the skills
@@ -327,9 +327,9 @@ OpenID (not GitHub) will need a free GitHub account for this step specifically
 
 In Workbench, start the session and choose the **Positron** IDE.
 
-**Why Positron?** One IDE, **both R and Python** — Section A is R (admiral),
-Section B's report generator is Python (`python-docx`), and Section C touches
-both. One session covers everything.
+**Why Positron?** One IDE, **both R and Python** — Section A's report
+generator is Python (`python-docx`), Section B is R (admiral), and Section C
+touches both. One session covers everything.
 
 ``` bash
 git clone https://github.com/<your-username>/rpharma-2026-workshop.git
@@ -396,9 +396,76 @@ can self-check without unmuting.]
 Do not start Section A until everyone confirms this in chat.
 :::
 
-# Section A — ADaM generation {.unnumbered}
+# Section A — Group sequential design {.unnumbered}
 
 ## Section A — what we'll do
+
+Drive the **group-sequential-design** skill to design a survival trial:
+
+- Survival endpoints (OS / PFS / DFS), interim + final analyses
+- Alpha-spending boundaries (Lan-DeMets, Hwang-Shih-DeCani)
+- Sample-size / event targets (N-first approach)
+- Graphical multiplicity for co-primary / multi-population designs
+- **`lrstat` simulation** to verify the analytic design
+- A template-driven **Word report** (`gsd_report.py`)
+
+::: {.notes}
+Scope note the skill enforces: standard group sequential designs only. Adaptive
+enrichment, sample-size re-estimation, seamless dose-selection, platform trials,
+and non-survival primary endpoints are explicitly out of scope — the skill will
+say so and stop.
+
+Tools: gsDesign, gsDesign2, lrstat, graphicalMCP, jsonlite (R) + python-docx.
+
+[CONFIRM WITH ERIC: time budget for Section A within the 3-hour block.]
+:::
+
+## Section A — how the skill behaves
+
+- Asks design questions **one at a time**, in plain language, no defaults
+  offered
+- Summarises all inputs in a table and waits for your confirmation
+- Computes the design, then **checks interim-analysis timing** against
+  enrollment and minimum-gap constraints
+- **Verifies by simulation** before delivering — power within ±2 pp, type I
+  error within ±0.5 pp
+- Writes every number to `gsd_results.json`; the report reads from there (no
+  hardcoded values)
+
+::: {.notes}
+The one-artifact-per-turn pacing in the skill means the agent writes a script,
+stops, runs it, stops, etc. That is intentional — it keeps each step
+reviewable.
+:::
+
+## Section A — hands-on exercise
+
+Let's design a Phase 3 Oncology trial
+
+
+
+::: {.notes}
+FLAG: this section needs Eric's direct input and review. Do not draft a
+scenario — the Q&A flow, the specific numbers, and the "what good looks like"
+checkpoints should be Eric's. Once provided, expand into full step slides
+matching the what-we'll-do / how-it-behaves / hands-on / debrief pattern used
+elsewhere in this deck.
+:::
+
+## Section A — debrief
+
+- Are the questions asked by the skill helpful?
+- Do the outputs include everything you need?
+- Can you apply this skill to your workflow?
+
+::: {.notes}
+Same disclaimer applies: a designed-and-verified draft is still a draft. The
+statistician owns the final design.
+:::
+
+# Section B — ADaM generation {.unnumbered}
+
+## Section B — what we'll do
 
 Drive the **admiral** skill family to derive ADaM datasets from SDTM:
 
@@ -419,10 +486,10 @@ Source data is the pharmaverse public CDISC test data (`pharmaversesdtm` /
 The agent reads `skills/admiral/SKILL.md` (shared conventions) first, then the
 child skill for the dataset in question.
 
-[CONFIRM WITH JEFF: time budget for Section A within the 3-hour block.]
+[CONFIRM WITH JEFF: time budget for Section B within the 3-hour block.]
 :::
 
-## Section A — how the skill behaves
+## Section B — how the skill behaves
 
 When you ask for a derivation, the skilled agent will:
 
@@ -440,7 +507,7 @@ disposition mapping, age cut-points, TEAE window). The skill deliberately does
 not guess these.
 :::
 
-## Section A — hands-on exercise
+## Section B — hands-on exercise
 
 ::: {.callout-important}
 Exercise content pending — to be supplied by Jeff
@@ -460,7 +527,7 @@ expected agent behaviour, review checkpoints, and the QC the attendee runs at
 the end. Once provided, expand this into the needed number of step slides.
 :::
 
-## Section A — debrief
+## Section B — debrief
 
 - Where did the agent place `# REVIEW:` markers, and were they the right places?
 - What did *you* have to decide that the skill correctly refused to guess?
@@ -469,72 +536,6 @@ the end. Once provided, expand this into the needed number of step slides.
 ::: {.notes}
 Reinforce the disclaimer: the output is a drafting aid. Independent QC against
 your own process is still required before any regulated use.
-:::
-
-# Section B — Group sequential design {.unnumbered}
-
-## Section B — what we'll do
-
-Drive the **group-sequential-design** skill to design a survival trial:
-
-- Survival endpoints (OS / PFS / DFS), interim + final analyses
-- Alpha-spending boundaries (Lan-DeMets, Hwang-Shih-DeCani)
-- Sample-size / event targets (N-first approach)
-- Graphical multiplicity for co-primary / multi-population designs
-- **`lrstat` simulation** to verify the analytic design
-- A template-driven **Word report** (`gsd_report.py`)
-
-::: {.notes}
-Scope note the skill enforces: standard group sequential designs only. Adaptive
-enrichment, sample-size re-estimation, seamless dose-selection, platform trials,
-and non-survival primary endpoints are explicitly out of scope — the skill will
-say so and stop.
-
-Tools: gsDesign, gsDesign2, lrstat, graphicalMCP, jsonlite (R) + python-docx.
-
-[CONFIRM WITH ERIC: time budget for Section B within the 3-hour block.]
-:::
-
-## Section B — how the skill behaves
-
-- Asks design questions **one at a time**, in plain language, no defaults
-  offered
-- Summarises all inputs in a table and waits for your confirmation
-- Computes the design, then **checks interim-analysis timing** against
-  enrollment and minimum-gap constraints
-- **Verifies by simulation** before delivering — power within ±2 pp, type I
-  error within ±0.5 pp
-- Writes every number to `gsd_results.json`; the report reads from there (no
-  hardcoded values)
-
-::: {.notes}
-The one-artifact-per-turn pacing in the skill means the agent writes a script,
-stops, runs it, stops, etc. That is intentional — it keeps each step
-reviewable.
-:::
-
-## Section B — hands-on exercise
-
-Let's design a Phase 3 Oncology trial
-
-
-
-::: {.notes}
-FLAG: this section needs Eric's direct input and review. Do not draft a
-scenario — the Q&A flow, the specific numbers, and the "what good looks like"
-checkpoints should be Eric's. Once provided, expand into step slides mirroring
-Section A's structure.
-:::
-
-## Section B — debrief
-
-- Are the questions asked by the skill helpful?
-- Do the outputs include everything you need?
-- Can you apply this skill to your workflow?
-
-::: {.notes}
-Same disclaimer applies: a designed-and-verified draft is still a draft. The
-statistician owns the final design.
 :::
 
 # Section C — Modify, extend, and build a skill {.unnumbered}
@@ -607,9 +608,9 @@ could prototype in the week after the workshop.
 
 ## What you did today
 
-- Ran the **admiral** skills to derive ADaM datasets from SDTM
 - Ran the **group-sequential-design** skill to design and verify a survival
   trial
+- Ran the **admiral** skills to derive ADaM datasets from SDTM
 - Read a skill's internals, **modified** one, and **sketched** your own
 
 All driven by describing the task in natural language — the skill supplied the
